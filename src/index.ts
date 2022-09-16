@@ -6,7 +6,11 @@ class App {
   run() {
     const envService = new EnvService();
     const file = path.resolve(process.cwd(), process.env.PLUGIN_FILE);
-    const template = path.resolve(process.cwd(), process.env.PLUGIN_TEMPLATE);
+    const templatePath = path.resolve(process.cwd(), process.env.PLUGIN_TEMPLATE);
+    if (!fs.existsSync(templatePath)) {
+      console.log(`template file does not exist`);
+      process.exit(1);
+    }
     const values = {};
     const envs = process.env.PLUGIN_ENVS.split(',');
     envs.forEach((item) => {
@@ -18,7 +22,7 @@ class App {
         process.exit(1);
       }
     }
-    envService.compile(file, template, values);
+    envService.compile(file, templatePath, values);
   }
 }
 
